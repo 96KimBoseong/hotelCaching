@@ -1,6 +1,7 @@
 package com.teamsparta.hotelcaching.domain.hotel.model
 
 import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
+import com.teamsparta.hotelcaching.domain.review.model.ReviewEntity
 import jakarta.persistence.*
 
 @Entity
@@ -17,7 +18,10 @@ class HotelEntity(
     val content: String,
 
     @Column(name = "price")
-    val price: Long
+    val price: Long,
+
+    @OneToMany(mappedBy = "hotel", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var reviews: MutableList<ReviewEntity> = mutableListOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
