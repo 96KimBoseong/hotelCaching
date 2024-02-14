@@ -1,6 +1,6 @@
 package com.teamsparta.hotelcaching.domain.review.service
 
-import com.teamsparta.hotelcaching.domain.exception.ModelNotFoundException
+import com.teamsparta.hotelcaching.exception.ModelNotFoundException
 import com.teamsparta.hotelcaching.domain.hotel.repository.HotelRepository
 import com.teamsparta.hotelcaching.domain.review.dto.ReviewRequest
 import com.teamsparta.hotelcaching.domain.review.dto.ReviewResponse
