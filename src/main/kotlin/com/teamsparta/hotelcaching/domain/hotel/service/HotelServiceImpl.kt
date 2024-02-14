@@ -1,8 +1,8 @@
-package com.teamsparta.hotelcaching.hotel.service
+package com.teamsparta.hotelcaching.domain.hotel.service
 
-import com.teamsparta.hotelcaching.hotel.dto.HotelResponse
-import com.teamsparta.hotelcaching.hotel.model.toResponse
-import com.teamsparta.hotelcaching.hotel.repository.HotelRepository
+import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
+import com.teamsparta.hotelcaching.domain.hotel.model.toResponse
+import com.teamsparta.hotelcaching.domain.hotel.repository.HotelRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

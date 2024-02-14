@@ -1,4 +1,4 @@
-package com.teamsparta.hotelcaching.hotel.dto
+package com.teamsparta.hotelcaching.domain.hotel.dto
 
 data class HotelResponse(
     val id: Long,

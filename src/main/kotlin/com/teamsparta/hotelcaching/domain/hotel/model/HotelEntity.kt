@@ -1,6 +1,6 @@
-package com.teamsparta.hotelcaching.hotel.model
+package com.teamsparta.hotelcaching.domain.hotel.model
 
-import com.teamsparta.hotelcaching.hotel.dto.HotelResponse
+import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
 import jakarta.persistence.*
 
 @Entity

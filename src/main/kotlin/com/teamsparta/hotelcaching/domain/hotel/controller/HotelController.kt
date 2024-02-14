@@ -1,7 +1,7 @@
-package com.teamsparta.hotelcaching.hotel.controller
+package com.teamsparta.hotelcaching.domain.hotel.controller
 
-import com.teamsparta.hotelcaching.hotel.dto.HotelResponse
-import com.teamsparta.hotelcaching.hotel.service.HotelService
+import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
+import com.teamsparta.hotelcaching.domain.hotel.service.HotelService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
