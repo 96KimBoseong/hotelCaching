@@ -1,18 +1,24 @@
 package com.teamsparta.hotelcaching.domain.hotel.service
 
+import com.teamsparta.hotelcaching.domain.history.dto.HistoryResponse
+import com.teamsparta.hotelcaching.domain.history.model.HistoryEntity
+import com.teamsparta.hotelcaching.domain.history.repository.HistoryRepository
 import com.teamsparta.hotelcaching.domain.hotel.dto.HotelRequest
 import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
 import com.teamsparta.hotelcaching.domain.hotel.model.HotelEntity
 import com.teamsparta.hotelcaching.domain.hotel.model.toResponse
 import com.teamsparta.hotelcaching.domain.hotel.repository.HotelRepository
 import com.teamsparta.hotelcaching.exception.ModelNotFoundException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class HotelServiceImpl(
-    private val hotelRepository: HotelRepository
+    private val hotelRepository: HotelRepository,
+    private val historyRepository: HistoryRepository
 ): HotelService {
 
     @Transactional(readOnly = true)
@@ -35,4 +41,34 @@ class HotelServiceImpl(
         val hotel = hotelRepository.findByIdOrNull(hotelId) ?: throw ModelNotFoundException("Hotel",hotelId)
         hotelRepository.delete(hotel)
     }
+
+    @Transactional
+    override fun searchHotelList(name: String): List<HotelResponse> {
+        saveSearchHistory(name)
+        return hotelRepository.searchHotelListByName(name).map { it.toResponse() }
+    }
+
+    @Transactional
+    override fun searchHotelListWithPaging(name: String, pageable: Pageable): Page<HotelResponse> {
+        saveSearchHistory(name)
+        return hotelRepository.searchHotelListByNameWithPaging(name,pageable).map { it.toResponse() }
+    }
+
+    override fun getPopularKeyWordBySearchNumber(): List<HistoryResponse> {
+        val popularHistories = historyRepository.findAll()
+        return popularHistories.map { HistoryResponse(it.keyWord) }
+    }
+
+    private fun saveSearchHistory(keyWord : String) {
+        val existingHistory = historyRepository.findByKeyWord(keyWord)
+
+        if(existingHistory != null) {
+            existingHistory.searchNumber++
+            historyRepository.save(existingHistory)
+        } else {
+            val newHistory = HistoryEntity(keyWord = keyWord, searchNumber = 1)
+            historyRepository.save(newHistory)
+        }
+    }
 }
+
