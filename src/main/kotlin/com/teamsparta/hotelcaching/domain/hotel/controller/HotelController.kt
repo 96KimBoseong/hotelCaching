@@ -5,6 +5,9 @@ import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
 import com.teamsparta.hotelcaching.domain.hotel.service.HotelService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -45,5 +48,33 @@ class HotelController(
     fun deleteHotel(@PathVariable hotelId: Long):ResponseEntity<Unit> {
         hotelService.deleteHotel(hotelId)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+    //호텔검색
+//    @GetMapping("/v1/search")
+//    fun searchHotel(
+//        @RequestParam(name = "name") name:String,
+//        @PageableDefault(
+//            size = 10,
+//            sort = ["name"]
+//        ) pageable: Pageable
+//    ):ResponseEntity<Page<HotelResponse>>
+//    {
+//        return ResponseEntity
+//            .status(HttpStatus.OK)
+//            .body(hotelService.searchHotelPageList(name,pageable))
+//    }
+//}
+
+    @GetMapping("/v1/search")
+    fun searchHotel(
+        @RequestParam(name = "name") name:String,
+        @RequestParam(value = "page") page: Int,
+        @RequestParam(value = "size")size: Int
+
+    ):ResponseEntity<Page<HotelResponse>>
+    {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(hotelService.searchHotelPageList(name,page,size))
     }
 }
