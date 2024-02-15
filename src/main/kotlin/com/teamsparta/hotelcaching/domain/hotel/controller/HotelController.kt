@@ -1,10 +1,13 @@
 package com.teamsparta.hotelcaching.domain.hotel.controller
 
+import com.teamsparta.hotelcaching.domain.history.dto.HistoryResponse
 import com.teamsparta.hotelcaching.domain.hotel.dto.HotelRequest
 import com.teamsparta.hotelcaching.domain.hotel.dto.HotelResponse
 import com.teamsparta.hotelcaching.domain.hotel.service.HotelService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -45,5 +48,26 @@ class HotelController(
     fun deleteHotel(@PathVariable hotelId: Long):ResponseEntity<Unit> {
         hotelService.deleteHotel(hotelId)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
+    @GetMapping("/search")
+    fun searchHotelList(@RequestParam(name = "name") name : String): ResponseEntity<List<HotelResponse>>{
+        return ResponseEntity.status(HttpStatus.OK).body(hotelService.searchHotelList(name))
+    }
+
+    @GetMapping("/search/paging")
+    fun searchHotelListWithPaging(
+        @RequestParam(name = "name") name : String,
+        @RequestParam(name = "page", defaultValue = "0") page: Int,
+        @RequestParam(name = "size", defaultValue = "5") size: Int,
+    ): ResponseEntity<Page<HotelResponse>>{
+        val pageable = PageRequest.of(page,size)
+        val hotelPage = hotelService.searchHotelListWithPaging(name,pageable)
+        return ResponseEntity.status(HttpStatus.OK).body(hotelPage)
+    }
+
+    @GetMapping("/popular")
+    fun getPopularKeyWordBySearchNumber():ResponseEntity<List<HistoryResponse>> {
+        return ResponseEntity.status(HttpStatus.OK).body(hotelService.getPopularKeyWordBySearchNumber())
     }
 }

@@ -66,6 +66,10 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.bootBuildImage {
+    builder.set("paketobuildpacks/builder-jammy-base:latest")
+}
+
 noArg {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
