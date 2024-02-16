@@ -9,6 +9,9 @@ import com.teamsparta.hotelcaching.domain.hotel.model.HotelEntity
 import com.teamsparta.hotelcaching.domain.hotel.model.toResponse
 import com.teamsparta.hotelcaching.domain.hotel.repository.HotelRepository
 import com.teamsparta.hotelcaching.exception.ModelNotFoundException
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -26,6 +29,8 @@ class HotelServiceImpl(
         return hotelRepository.findAll().map { it.toResponse() }
     }
 
+//    @CacheEvict(value = ["cacheTest"],allEntries = true)
+//    @CachePut(value = ["cacheTest"])
     override fun createHotel(request: HotelRequest): HotelResponse {
         val hotel = HotelEntity(
             content = request.content,
@@ -37,6 +42,9 @@ class HotelServiceImpl(
         return saveHotel.toResponse()
     }
 
+//    @CacheEvict(value = ["cacheTest"],allEntries = true)
+//    @CachePut(value = ["cacheTest"])
+    @CacheEvict(value = ["cacheTest"], key = "#hotelId",)
     override fun deleteHotel(hotelId: Long) {
         val hotel = hotelRepository.findByIdOrNull(hotelId) ?: throw ModelNotFoundException("Hotel",hotelId)
         hotelRepository.delete(hotel)
@@ -59,7 +67,8 @@ class HotelServiceImpl(
         return popularHistories.map { HistoryResponse(it.keyWord) }
     }
 
-    private fun saveSearchHistory(keyWord : String) {
+
+    fun saveSearchHistory(keyWord : String) {
         val existingHistory = historyRepository.findByKeyWord(keyWord)
 
         if(existingHistory != null) {
@@ -70,5 +79,6 @@ class HotelServiceImpl(
             historyRepository.save(newHistory)
         }
     }
+
 }
 
