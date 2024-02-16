@@ -10,6 +10,7 @@ import com.teamsparta.hotelcaching.domain.hotel.model.HotelEntity
 import com.teamsparta.hotelcaching.domain.hotel.model.toResponse
 import com.teamsparta.hotelcaching.domain.hotel.repository.HotelRepository
 import com.teamsparta.hotelcaching.exception.ModelNotFoundException
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -56,6 +57,7 @@ class HotelServiceImpl(
 
     //호텔검색 페이징 적용
     @Transactional
+    //@Cacheable("search")
     override fun searchHotelPageList(name: String, page: Int,size:Int): Page<HotelResponse> {
         historyService.saveKeyword(name)
         return hotelRepository.searchByHotelNamePageList(name,page,size).map { it.toResponse() }

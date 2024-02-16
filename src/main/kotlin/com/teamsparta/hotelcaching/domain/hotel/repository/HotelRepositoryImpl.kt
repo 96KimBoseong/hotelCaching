@@ -3,6 +3,7 @@ package com.teamsparta.hotelcaching.domain.hotel.repository
 import com.teamsparta.hotelcaching.domain.hotel.model.HotelEntity
 import com.teamsparta.hotelcaching.domain.hotel.model.QHotelEntity
 import com.teamsparta.hotelcaching.infra.QueryDslSupport
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -17,6 +18,7 @@ class HotelRepositoryImpl:CustomHotelRepository, QueryDslSupport() {
             .fetch()
     }
 
+    @Cacheable("search")
     override fun searchByHotelNamePageList(name: String,page:Int,size:Int): Page<HotelEntity> {
             val result = queryFactory.selectFrom(hotel)
                 .where(hotel.name.contains(name))

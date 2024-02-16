@@ -41,6 +41,8 @@ dependencies {
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
 
+    implementation ("org.springframework.boot:spring-boot-starter-cache")//캐시 !
+
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
     runtimeOnly("org.postgresql:postgresql")
