@@ -20,7 +20,7 @@ spring:
 logging:
   level:
     org:
-      hibernate:
+      hibernatez:
         SQL: debug
         orm:
           jdbc:
