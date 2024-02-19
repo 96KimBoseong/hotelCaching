@@ -50,12 +50,14 @@ class HotelController(
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
-    @GetMapping("/search")
+    @Operation(summary = "v1")
+    @GetMapping("/search/v1")
     fun searchHotelList(@RequestParam(name = "name") name : String): ResponseEntity<List<HotelResponse>>{
         return ResponseEntity.status(HttpStatus.OK).body(hotelService.searchHotelList(name))
     }
 
-    @GetMapping("/search/paging")
+    @Operation(summary = "v1")
+    @GetMapping("/search/paging/v1")
     fun searchHotelListWithPaging(
         @RequestParam(name = "name") name : String,
         @RequestParam(name = "page", defaultValue = "0") page: Int,
@@ -66,8 +68,31 @@ class HotelController(
         return ResponseEntity.status(HttpStatus.OK).body(hotelPage)
     }
 
+    @Operation(summary = "캐싱 적용 v2")
+    @GetMapping("/search/v2")
+    fun searchHotelListVersion2(@RequestParam(name = "name") name : String): ResponseEntity<List<HotelResponse>>{
+        return ResponseEntity.status(HttpStatus.OK).body(hotelService.searchHotelListVersion2(name))
+    }
+
+    @Operation(summary = "캐싱 적용 v2")
+    @GetMapping("/search/paging/v2")
+    fun searchHotelListWithPagingVersion2(
+        @RequestParam(name = "name") name : String,
+        @RequestParam(name = "page", defaultValue = "0") page: Int,
+        @RequestParam(name = "size", defaultValue = "5") size: Int,
+    ): ResponseEntity<Page<HotelResponse>>{
+        val pageable = PageRequest.of(page,size)
+        val hotelPage = hotelService.searchHotelListWithPagingVersion2(name,pageable)
+        return ResponseEntity.status(HttpStatus.OK).body(hotelPage)
+    }
+
     @GetMapping("/popular")
     fun getPopularKeyWordBySearchNumber():ResponseEntity<List<HistoryResponse>> {
         return ResponseEntity.status(HttpStatus.OK).body(hotelService.getPopularKeyWordBySearchNumber())
+    }
+
+    @GetMapping("/v1/test")
+    fun test(name: String) {
+        return hotelService.testEvict(name)
     }
 }

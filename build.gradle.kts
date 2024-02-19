@@ -41,6 +41,9 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta")
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
+    compileOnly ("org.projectlombok:lombok:1.18.20")
+    annotationProcessor ("org.projectlombok:lombok:1.18.20")
+
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")

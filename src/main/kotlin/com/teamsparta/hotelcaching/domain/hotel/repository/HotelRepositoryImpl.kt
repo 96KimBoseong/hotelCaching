@@ -32,4 +32,23 @@ class HotelRepositoryImpl: CustomHotelRepository,QueryDslSupport() {
         return PageImpl(query,pageable,totalCount)
     }
 
+    override fun searchHotelListByNameVersion2(name : String): List<HotelEntity>{
+        return queryFactory.selectFrom(hotel)
+            .where(hotel.name.containsIgnoreCase(name))
+            .fetch()
+    }
+
+    override fun searchHotelListByNameWithPagingVersion2(name: String, pageable: Pageable): Page<HotelEntity> {
+
+        val totalCount = queryFactory.select(hotel.count()).from(hotel).fetchOne() ?: 0L
+
+        val query = queryFactory.selectFrom(hotel)
+            .where(hotel.name.containsIgnoreCase(name))
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetch()
+
+        return PageImpl(query,pageable,totalCount)
+    }
+
 }
