@@ -9,4 +9,8 @@ interface CustomHotelRepository {
     fun searchHotelListByName(name : String): List<HotelEntity>
 
     fun searchHotelListByNameWithPaging(name: String,pageable: Pageable) : Page<HotelEntity>
+
+    fun searchHotelListByNameVersion2(name : String): List<HotelEntity>
+
+    fun searchHotelListByNameWithPagingVersion2(name: String,pageable: Pageable) : Page<HotelEntity>
 }
