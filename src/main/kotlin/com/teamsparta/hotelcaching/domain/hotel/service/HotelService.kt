@@ -23,5 +23,4 @@ interface HotelService {
 
     fun getPopularKeyWordBySearchNumber():List<HistoryResponse>
 
-    fun testEvict(name: String)
 }
