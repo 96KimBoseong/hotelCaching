@@ -14,18 +14,18 @@ class Scheduler(private val historyRepository: HistoryRepository,
 
     val searchHistoryToCache = hotelServiceImpl.searchHistoryToCacheInService
 
-    @Scheduled(initialDelay = 30000 , fixedRate = 30000)
+    @Scheduled(initialDelay = 3000000 , fixedRate = 3000000)
     fun saveCachedSearchHistory() {
         for ((keyWord, searchNumber) in searchHistoryToCache) {
             val existingHistory = historyRepository.findByKeyWord(keyWord)
             if (existingHistory != null) {
                 existingHistory.searchNumber += searchNumber
                 historyRepository.save(existingHistory)
-                println("키워드 : ${keyWord}, 검색 횟수 ${existingHistory.searchNumber}")
+//                println("키워드 : ${keyWord}, 검색 횟수 ${existingHistory.searchNumber}")
             } else {
                 val newHistory = HistoryEntity(keyWord = keyWord, searchNumber = searchNumber)
                 historyRepository.save(newHistory)
-                println("새 키워드 : ${keyWord}, 검색 횟수: ${searchNumber}.")
+//                println("새 키워드 : ${keyWord}, 검색 횟수: ${searchNumber}.")
             }
         }
         searchHistoryToCache.clear()
