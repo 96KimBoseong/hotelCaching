@@ -45,6 +45,7 @@ dependencies {
     kapt("jakarta.persistence:jakarta.persistence-api")
     compileOnly ("org.projectlombok:lombok:1.18.20")
     annotationProcessor ("org.projectlombok:lombok:1.18.20")
+    implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")

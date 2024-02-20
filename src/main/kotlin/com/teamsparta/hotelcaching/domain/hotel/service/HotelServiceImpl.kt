@@ -60,22 +60,18 @@ class HotelServiceImpl(
     @Transactional
     override fun searchHotelListVersion2(name: String): List<HotelResponse> {
         saveSearchHistoryToCache(name)
-        return hotelRepository.searchHotelListByNameVersion2(name).map { it.toResponse() }
+        return hotelRepository.searchHotelListByNameVersion2(name)
     }
 
     @Transactional
     override fun searchHotelListWithPagingVersion2(name: String, pageable: Pageable): Page<HotelResponse> {
-        saveSearchHistory(name)
-        return hotelRepository.searchHotelListByNameWithPagingVersion2(name,pageable).map { it.toResponse() }
+        saveSearchHistoryToCache(name)
+        return hotelRepository.searchHotelListByNameWithPagingVersion2(name,pageable)
     }
 
     override fun getPopularKeyWordBySearchNumber(): List<HistoryResponse> {
         val popularHistories = historyRepository.findAll()
         return popularHistories.map { HistoryResponse(it.keyWord) }
-    }
-
-    @CacheEvict(value = ["cacheTest"], key = "#name")
-    override fun testEvict(name: String) {
     }
 
     fun saveSearchHistory(keyword : String) {

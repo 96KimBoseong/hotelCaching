@@ -90,9 +90,4 @@ class HotelController(
     fun getPopularKeyWordBySearchNumber():ResponseEntity<List<HistoryResponse>> {
         return ResponseEntity.status(HttpStatus.OK).body(hotelService.getPopularKeyWordBySearchNumber())
     }
-
-    @GetMapping("/v1/test")
-    fun test(name: String) {
-        return hotelService.testEvict(name)
-    }
 }
