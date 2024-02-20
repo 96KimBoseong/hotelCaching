@@ -19,9 +19,17 @@
 ![rs](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
 ![sl](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)
 
-### 팀원 소개
+<br>
 
+### 팀원 소개 및 역할 분담
 
+- 김성민 : ERD,redis셋팅 , ngrinder 성능 테스트
+
+- 김선병 : 팀장,초기셋팅(git,project파일),리뷰+검색,캐싱,readme 작성,시연 영상 제작
+
+- 강군호 : API명세서,호텔+검색,캐싱,발표 대본,ptt준비
+
+- 김보성 : 와이어프레임,검색,캐싱,캐시 정책 관리 코드 작성,검색 정책 관리 코드 작성
 
 
 
