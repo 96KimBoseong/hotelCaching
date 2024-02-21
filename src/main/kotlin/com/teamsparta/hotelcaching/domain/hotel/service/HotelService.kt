@@ -23,4 +23,6 @@ interface HotelService {
 
     fun getPopularKeyWordBySearchNumber():List<HistoryResponse>
 
+
+
 }

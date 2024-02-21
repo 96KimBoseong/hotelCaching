@@ -1,4 +1,4 @@
-package com.teamsparta.hotelcaching.infra
+package com.teamsparta.hotelcaching.domain.redis
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -6,10 +6,13 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.StringRedisTemplate
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
 import org.springframework.data.redis.serializer.*
-import java.time.Duration
+
 
 @Configuration
+@EnableRedisRepositories
 class RedisConfig() {
     @Value("\${spring.data.redis.port}")
     private val port = 0
@@ -31,9 +34,10 @@ class RedisConfig() {
             this.valueSerializer = StringRedisSerializer()
 
             this.hashKeySerializer = StringRedisSerializer()
-//            this.hashValueSerializer = GenericJackson2JsonRedisSerializer()
+            this.hashValueSerializer = StringRedisSerializer()
         }
     }
+
 
 //    @Bean
 //    fun cacheManager(): CacheManager {

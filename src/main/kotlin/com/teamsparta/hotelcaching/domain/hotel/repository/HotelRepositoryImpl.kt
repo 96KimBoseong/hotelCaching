@@ -11,11 +11,12 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
 @Repository
-class HotelRepositoryImpl: CustomHotelRepository,QueryDslSupport() {
+class HotelRepositoryImpl : CustomHotelRepository,
+    QueryDslSupport() {
 
     private val hotel = QHotelEntity.hotelEntity
 
-    override fun searchHotelListByName(name : String): List<HotelEntity>{
+    override fun searchHotelListByName(name: String): List<HotelEntity> {
         return queryFactory.selectFrom(hotel)
             .where(hotel.name.containsIgnoreCase(name))
             .fetch()
@@ -31,18 +32,19 @@ class HotelRepositoryImpl: CustomHotelRepository,QueryDslSupport() {
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        return PageImpl(query,pageable,totalCount)
+        return PageImpl(query, pageable, totalCount)
     }
 
-    override fun searchHotelListByNameVersion2(name : String): List<HotelResponse>{
+    override fun searchHotelListByNameVersion2(name: String): List<HotelResponse> {
         val query = queryFactory.selectFrom(hotel)
             .where(hotel.name.containsIgnoreCase(name))
             .fetch()
 
-        val hotelResponse = query.map{ it.toResponse() }
+        val hotelResponse = query.map { it.toResponse() }
 
         return hotelResponse
     }
+
 
     override fun searchHotelListByNameWithPagingVersion2(name: String, pageable: Pageable): Page<HotelResponse> {
         val totalCount = queryFactory.select(hotel.count()).from(hotel).fetchOne() ?: 0L

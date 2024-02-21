@@ -12,6 +12,7 @@ import com.teamsparta.hotelcaching.exception.ModelNotFoundException
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class HotelServiceImpl(
     private val hotelRepository: HotelRepository,
     private val historyRepository: HistoryRepository,
+    private val redisTemplate: RedisTemplate<String, Any>
 ): HotelService {
 
     @Transactional(readOnly = true)
@@ -47,25 +49,25 @@ class HotelServiceImpl(
 
     @Transactional
     override fun searchHotelList(name: String): List<HotelResponse> {
-        saveSearchHistory(name)
+        saveSearchHistoryByRedis(name)
         return hotelRepository.searchHotelListByName(name).map { it.toResponse() }
     }
 
     @Transactional
     override fun searchHotelListWithPaging(name: String, pageable: Pageable): Page<HotelResponse> {
-        saveSearchHistory(name)
+        saveSearchHistoryByRedis(name)
         return hotelRepository.searchHotelListByNameWithPaging(name,pageable).map { it.toResponse() }
     }
 
     @Transactional
     override fun searchHotelListVersion2(name: String): List<HotelResponse> {
-        saveSearchHistoryToCache(name)
+        saveSearchHistoryByRedis(name)
         return hotelRepository.searchHotelListByNameVersion2(name)
     }
 
     @Transactional
     override fun searchHotelListWithPagingVersion2(name: String, pageable: Pageable): Page<HotelResponse> {
-        saveSearchHistoryToCache(name)
+        saveSearchHistoryByRedis(name)
         return hotelRepository.searchHotelListByNameWithPagingVersion2(name,pageable)
     }
 
@@ -74,22 +76,19 @@ class HotelServiceImpl(
         return popularHistories.map { HistoryResponse(it.keyWord) }
     }
 
-    fun saveSearchHistory(keyword : String) {
-        val existingHistory = historyRepository.findByKeyWord(keyword)
-
-        if(existingHistory != null) {
-            existingHistory.searchNumber++
-            historyRepository.save(existingHistory)
-        } else {
-            val newHistory = HistoryEntity(keyWord = keyword, searchNumber = 1)
-            historyRepository.save(newHistory)
-        }
+    fun saveSearchHistoryByRedis(name: String) {
+        redisTemplate.opsForHash<String,Long>().increment("searchHistory",name,1)
     }
 
-    val searchHistoryToCacheInService: MutableMap<String,Long> = mutableMapOf()
+//    fun getSearchHistoryCacheFromRedis(): Map<String, Long> {
+//        val hash = redisTemplate.opsForHash<String,String>()
+//        val searchHistoryInMap = hash.entries("searchHistory")
+//        return searchHistoryInMap.mapValues { it.value.toLong() }
+//    } //Map으로 한번 더 저장하는 안좋은 로직, 레디스->Map->DB로 오기 때문에 효율이 떨어진다.
 
-    fun saveSearchHistoryToCache(keyWord: String) {
-        searchHistoryToCacheInService[keyWord] = searchHistoryToCacheInService.getOrDefault(keyWord, 0) +1
+    fun deleteAllSearchHistoryInRedis() {
+        redisTemplate.delete("searchHistory")
     }
+
 }
 
