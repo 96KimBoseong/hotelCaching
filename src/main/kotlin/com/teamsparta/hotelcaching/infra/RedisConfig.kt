@@ -31,9 +31,25 @@ class RedisConfig() {
             this.valueSerializer = StringRedisSerializer()
 
             this.hashKeySerializer = StringRedisSerializer()
-//            this.hashValueSerializer = GenericJackson2JsonRedisSerializer()
+            this.hashValueSerializer = StringRedisSerializer()
         }
     }
+
+//    @Bean
+//    fun redisTemplate(): RedisTemplate<String, Any> {
+//        return RedisTemplate<String, Any>().apply {
+//            this.connectionFactory = redisConnectionFactory()
+//
+//            this.keySerializer = StringRedisSerializer()
+//            this.valueSerializer = StringRedisSerializer()
+//
+//            this.hashKeySerializer = StringRedisSerializer()
+////            this.hashValueSerializer = GenericJackson2JsonRedisSerializer()
+//        }
+//    }
+
+
+
 
 //    @Bean
 //    fun cacheManager(): CacheManager {
