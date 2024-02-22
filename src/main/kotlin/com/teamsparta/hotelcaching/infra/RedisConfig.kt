@@ -10,7 +10,7 @@ import org.springframework.data.redis.serializer.*
 import java.time.Duration
 
 @Configuration
-class RedisConfig() {
+open class RedisConfig() {
     @Value("\${spring.data.redis.port}")
     private val port = 0
 
@@ -18,12 +18,12 @@ class RedisConfig() {
     private val host: String = ""
 
     @Bean
-    fun redisConnectionFactory(): RedisConnectionFactory {
+    open fun redisConnectionFactory(): RedisConnectionFactory {
         return LettuceConnectionFactory(host, port)
     }
 
     @Bean
-    fun redisTemplate(): RedisTemplate<String, Any> {
+    open fun redisTemplate(): RedisTemplate<String, Any> {
         return RedisTemplate<String, Any>().apply {
             this.connectionFactory = redisConnectionFactory()
 
