@@ -90,7 +90,6 @@ class HotelServiceImpl(
     fun saveSearchHistoryToCache(name: String) {
         redisTemplate.opsForHash<String, Long>().increment(SEARCH_HISTORY_CACHE_KEY, name, 1)
     }
-
     companion object {
         const val SEARCH_HISTORY_CACHE_KEY = "search_history"
     }
