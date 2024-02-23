@@ -1,5 +1,6 @@
 package com.teamsparta.hotelcaching.domain.history.model
 
+import com.teamsparta.hotelcaching.domain.history.dto.HistoryResponse
 import jakarta.persistence.*
 
 @Entity
@@ -16,4 +17,11 @@ class HistoryEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
+
+}
+
+fun HistoryEntity.toResponse():HistoryResponse{
+    return HistoryResponse(
+        keyWord = keyWord
+    )
 }

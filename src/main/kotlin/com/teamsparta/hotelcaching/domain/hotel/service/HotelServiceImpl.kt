@@ -12,6 +12,7 @@ import com.teamsparta.hotelcaching.exception.ModelNotFoundException
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class HotelServiceImpl(
     private val hotelRepository: HotelRepository,
     private val historyRepository: HistoryRepository,
+    private val redisTemplate: RedisTemplate<String,Any>
 ): HotelService {
 
     @Transactional(readOnly = true)
@@ -41,7 +43,7 @@ class HotelServiceImpl(
 
     @CacheEvict(value = ["cacheTest"], allEntries = true)
     override fun deleteHotel(hotelId: Long) {
-        val hotel = hotelRepository.findByIdOrNull(hotelId) ?: throw ModelNotFoundException("Hotel",hotelId)
+        val hotel = hotelRepository.findByIdOrNull(hotelId) ?: throw ModelNotFoundException("Hotel", hotelId)
         hotelRepository.delete(hotel)
     }
 
@@ -54,7 +56,7 @@ class HotelServiceImpl(
     @Transactional
     override fun searchHotelListWithPaging(name: String, pageable: Pageable): Page<HotelResponse> {
         saveSearchHistory(name)
-        return hotelRepository.searchHotelListByNameWithPaging(name,pageable).map { it.toResponse() }
+        return hotelRepository.searchHotelListByNameWithPaging(name, pageable).map { it.toResponse() }
     }
 
     @Transactional
@@ -66,18 +68,18 @@ class HotelServiceImpl(
     @Transactional
     override fun searchHotelListWithPagingVersion2(name: String, pageable: Pageable): Page<HotelResponse> {
         saveSearchHistoryToCache(name)
-        return hotelRepository.searchHotelListByNameWithPagingVersion2(name,pageable)
+        return hotelRepository.searchHotelListByNameWithPagingVersion2(name, pageable)
     }
 
     override fun getPopularKeyWordBySearchNumber(): List<HistoryResponse> {
-        val popularHistories = historyRepository.findAll()
-        return popularHistories.map { HistoryResponse(it.keyWord) }
+        val popularHistories = historyRepository.findTrend()
+        return popularHistories
     }
 
-    fun saveSearchHistory(keyword : String) {
+    fun saveSearchHistory(keyword: String) {
         val existingHistory = historyRepository.findByKeyWord(keyword)
 
-        if(existingHistory != null) {
+        if (existingHistory != null) {
             existingHistory.searchNumber++
             historyRepository.save(existingHistory)
         } else {
@@ -85,11 +87,11 @@ class HotelServiceImpl(
             historyRepository.save(newHistory)
         }
     }
-
-    val searchHistoryToCacheInService: MutableMap<String,Long> = mutableMapOf()
-
-    fun saveSearchHistoryToCache(keyWord: String) {
-        searchHistoryToCacheInService[keyWord] = searchHistoryToCacheInService.getOrDefault(keyWord, 0) +1
+    fun saveSearchHistoryToCache(name: String) {
+        redisTemplate.opsForHash<String, Long>().increment(SEARCH_HISTORY_CACHE_KEY, name, 1)
+    }
+    companion object {
+        const val SEARCH_HISTORY_CACHE_KEY = "search_history"
     }
 }
 
