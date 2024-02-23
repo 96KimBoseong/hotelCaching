@@ -36,5 +36,4 @@ class Scheduler(private val historyRepository: HistoryRepository,
         }
         redisTemplate.delete(SEARCH_HISTORY_CACHE_KEY)
     }
-
 }
