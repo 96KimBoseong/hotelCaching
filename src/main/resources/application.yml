@@ -26,3 +26,5 @@ logging:
             bind: trace
       springframework:
         security: debug
+
+
