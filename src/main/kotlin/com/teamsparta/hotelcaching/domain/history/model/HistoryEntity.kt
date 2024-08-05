@@ -7,7 +7,7 @@ import jakarta.persistence.*
 @Table(name = "history")
 class HistoryEntity(
 
-    @Column(name = "keyWord")
+    @Column(name = "keyWord",unique = true)
     var keyWord: String,
 
     @Column(name = "searchNumber")
