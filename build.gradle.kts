@@ -45,6 +45,8 @@ dependencies {
     annotationProcessor ("org.projectlombok:lombok:1.18.20")
     implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 
+    runtimeOnly ("mysql:mysql-connector-java:8.0.33")
+
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
